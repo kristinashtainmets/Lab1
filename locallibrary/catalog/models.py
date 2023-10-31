@@ -72,6 +72,11 @@ class BookInstance(models.Model):
 
     status = models.CharField(max_length=1, choices=LOAN_STATUS, blank=True, default='m', help_text='Book availability')
 
+    @property
+    def is_overdue(self):
+        if self.due_back and date.today() > self.due_back:
+            return True
+        return False
     class Meta:
         ordering = ["due_back"]
 
@@ -82,11 +87,7 @@ class BookInstance(models.Model):
         """
         return '%s (%s)' % (self.id,self.book.title)
 
-    @property
-    def is_overdue(self):
-        if self.due_back and date.today() > self.due_back:
-            return True
-        return False
+
 
 class Author(models.Model):
     """
